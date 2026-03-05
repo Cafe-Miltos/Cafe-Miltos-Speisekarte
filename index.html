@@ -9,7 +9,6 @@
   <style>
     :root{
       --green:#16a34a;
-      --green2:#22c55e;
       --brown:#3a2415;
       --brown2:#5a3b1e;
 
@@ -41,7 +40,6 @@
       overflow-x:hidden;
     }
 
-    /* Apple-like soft moving light */
     .glow{
       position: fixed;
       inset: -20%;
@@ -85,7 +83,18 @@
     }
     @keyframes enter{ to{ transform: translateY(0); opacity: 1; } }
 
-    /* Top area with true 3D perspective */
+    /* Page transition on click (iPhone-ish) */
+    .card.exit{
+      animation: exit .34s ease-in forwards;
+    }
+    @keyframes exit{
+      to{
+        opacity: 0;
+        transform: translateY(8px) scale(.985);
+        filter: blur(1px);
+      }
+    }
+
     .top{
       padding: 26px 18px 14px;
       display:grid;
@@ -94,7 +103,6 @@
       gap: 10px;
       border-bottom: 1px solid rgba(15,23,42,.08);
 
-      /* Important: perspective enables “depth” */
       perspective: 900px;
       transform-style: preserve-3d;
 
@@ -103,28 +111,21 @@
         radial-gradient(900px 280px at 50% 0%, rgba(90,59,30,.08), transparent 70%);
     }
 
-    .logoWrap{
-      transform-style: preserve-3d;
-      will-change: transform, opacity, filter;
-    }
+    .logoWrap{ transform-style: preserve-3d; will-change: transform, opacity, filter; }
 
-    /* 3D “fly from depth”: translateZ + rotateX + blur */
     .logo{
       width: min(320px, 80vw);
       height:auto;
       border-radius: 14px;
       filter: drop-shadow(0 12px 18px rgba(2,6,23,.16));
       opacity: 0;
-
       transform:
         translate3d(0, 22px, 0)
         translateZ(-280px)
         rotateX(18deg)
         scale(.92);
-
       animation: logo3d 1050ms cubic-bezier(.18,.95,.18,1) 60ms forwards;
     }
-
     @keyframes logo3d{
       0%{
         opacity: 0;
@@ -172,9 +173,7 @@
       transform: translateY(10px);
       animation: fadeUp .55s ease-out 680ms forwards;
     }
-    @keyframes fadeUp{
-      to{ opacity:1; transform: translateY(0); }
-    }
+    @keyframes fadeUp{ to{ opacity:1; transform: translateY(0); } }
 
     .spinner{
       width: 28px; height: 28px;
@@ -189,7 +188,6 @@
     }
     @keyframes spin{ to{ transform: rotate(360deg); } }
 
-    /* Menu section appears after delay, logo stays */
     .menu{
       padding: 16px 18px 18px;
       display: none;
@@ -216,6 +214,29 @@
       cursor: pointer;
       opacity: 0;
       transform: translateY(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* iPhone-ish ripple */
+    .btn::after{
+      content:"";
+      position:absolute;
+      inset:auto;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,.12);
+      transform: scale(0);
+      opacity: 0;
+      pointer-events:none;
+    }
+    .btn.ripple::after{
+      left: var(--x);
+      top: var(--y);
+      transform: translate(-50%,-50%) scale(28);
+      opacity: 1;
+      transition: transform .45s ease, opacity .6s ease;
     }
 
     .btn.show{
@@ -267,6 +288,7 @@
       background: #ffffff;
       box-shadow: 0 0 0 6px rgba(255,255,255,.16);
     }
+    .btn.green::after{ background: rgba(255,255,255,.18); }
 
     footer{
       padding: 12px 18px 16px;
@@ -283,11 +305,11 @@
     }
     footer a:hover{ text-decoration: underline; }
 
-    /* Reduce motion for accessibility */
     @media (prefers-reduced-motion: reduce){
       .glow, .logo, .welcome, .sub, .spinner{ animation: none !important; }
       .btn{ transition: none !important; opacity: 1 !important; transform: none !important; }
       .menu{ display:block !important; }
+      .card.exit{ animation: none !important; }
     }
   </style>
 </head>
@@ -296,14 +318,12 @@
   <div class="glow" aria-hidden="true"></div>
 
   <div class="wrap">
-    <div class="card" role="main" aria-label="MILTOS digitale Karte">
+    <div class="card" id="card" role="main" aria-label="MILTOS digitale Karte">
 
       <section class="top">
-        <!-- Logo liegt im Root exakt so: miltos-logo.png -->
         <div class="logoWrap">
           <img class="logo" src="miltos-logo.png" alt="MILTOS Café" />
         </div>
-
         <p class="welcome">Herzlich willkommen</p>
         <p class="sub">Bitte auswählen – die Karte öffnet sich direkt.</p>
         <div class="spinner" id="spinner" aria-hidden="true"></div>
@@ -311,7 +331,6 @@
 
       <section class="menu" id="menu">
         <div class="btns">
-          <!-- Öffnet direkt PDF (ohne Viewer auf der Seite) -->
           <a class="btn" id="b1" href="Karte%20caf%C3%A9%202026%20new.pdf" target="_blank" rel="noopener">
             <span class="left">
               <span class="dot" aria-hidden="true"></span>
@@ -339,27 +358,61 @@
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
 
-    // >>> HIER EINSTELLEN: Wann soll die Auswahl erscheinen?
-    // Millisekunden: 1200 = 1.2s, 2000 = 2.0s, 2800 = 2.8s
-    const REVEAL_MS = 2600;
+    // Zeit bis Buttons erscheinen
+    const REVEAL_MS = 2500;
+
+    // Übergang beim Klick (kurz, iPhone-like)
+    const EXIT_MS = 260;
 
     const menu = document.getElementById("menu");
     const spinner = document.getElementById("spinner");
     const b1 = document.getElementById("b1");
     const b2 = document.getElementById("b2");
+    const card = document.getElementById("card");
 
     window.addEventListener("load", () => {
       setTimeout(() => {
         menu.style.display = "block";
         spinner.style.display = "none";
 
-        // Buttons weich einblenden (stagger)
         requestAnimationFrame(() => {
           b1.classList.add("show");
           setTimeout(() => b2.classList.add("show"), 120);
         });
       }, REVEAL_MS);
     });
+
+    function addRipple(e, el){
+      const r = el.getBoundingClientRect();
+      const x = e.clientX ? (e.clientX - r.left) : (r.width * 0.25);
+      const y = e.clientY ? (e.clientY - r.top)  : (r.height * 0.50);
+      el.style.setProperty("--x", x + "px");
+      el.style.setProperty("--y", y + "px");
+      el.classList.remove("ripple");
+      void el.offsetWidth; // restart animation
+      el.classList.add("ripple");
+      setTimeout(() => el.classList.remove("ripple"), 650);
+    }
+
+    function interceptLink(el){
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        addRipple(e, el);
+
+        // kurzer “iPhone transition”
+        card.classList.add("exit");
+
+        // dann erst öffnen (besserer UX)
+        const url = el.getAttribute("href");
+        setTimeout(() => {
+          window.open(url, "_blank", "noopener");
+          card.classList.remove("exit");
+        }, EXIT_MS);
+      }, {passive:false});
+    }
+
+    interceptLink(b1);
+    interceptLink(b2);
   </script>
 </body>
 </html>
