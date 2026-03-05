@@ -21,6 +21,7 @@
       --line: rgba(255,255,255,.16);
       --shadow: 0 24px 80px rgba(0,0,0,.45);
       --r: 22px;
+      --max: 520px;
     }
 
     *{ box-sizing:border-box; }
@@ -37,7 +38,6 @@
       overflow:hidden;
     }
 
-    /* Subtle animated glow (very light) */
     .glow{
       position: fixed;
       inset: -20%;
@@ -67,7 +67,7 @@
     }
 
     .card{
-      width: min(520px, 94vw);
+      width: min(var(--max), 94vw);
       border-radius: calc(var(--r) + 8px);
       background: linear-gradient(180deg, var(--glass2), var(--glass));
       border: 1px solid var(--line);
@@ -86,6 +86,7 @@
     .top{
       padding: 26px 18px 18px;
       display:grid;
+      gap: 10px;
       justify-items:center;
       text-align:center;
       position: relative;
@@ -194,7 +195,6 @@
       filter: brightness(1.01);
     }
 
-    /* Small footer */
     .foot{
       padding: 10px 18px 16px;
       color: rgba(255,255,255,.55);
@@ -211,8 +211,8 @@
   <div class="wrap">
     <div class="card" role="main" aria-label="MILTOS digitale Karte">
       <div class="top">
-        <!-- Wichtig: Logo-Datei muss so im Repo liegen: assets/miltos-logo.png -->
-        <img class="logo" src="assets/miltos-logo.png" alt="MILTOS Café" />
+        <!-- Logo liegt im Root: miltos-logo.png -->
+        <img class="logo" src="miltos-logo.png" alt="MILTOS Café" />
         <p class="sub">Digitale Karte • bitte auswählen</p>
       </div>
 
