@@ -32,14 +32,75 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
       color: var(--text);
-      background:
-        radial-gradient(900px 600px at 16% 10%, rgba(34,197,94,.18), transparent 55%),
-        radial-gradient(900px 600px at 84% 14%, rgba(90,59,30,.14), transparent 55%),
-        radial-gradient(900px 600px at 50% 110%, rgba(22,163,74,.10), transparent 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
       overflow-x:hidden;
+
+      /* Premium layered background */
+      background:
+        radial-gradient(1200px 700px at 10% 10%, rgba(34,197,94,.22), transparent 60%),
+        radial-gradient(900px 600px at 92% 18%, rgba(90,59,30,.18), transparent 62%),
+        radial-gradient(900px 800px at 50% 120%, rgba(34,197,94,.14), transparent 65%),
+        linear-gradient(180deg, #faf8f4, #f1ede6);
     }
 
+    /* soft film grain */
+    .grain{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .10;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      animation: grainMove 10s steps(10) infinite;
+    }
+    @keyframes grainMove{
+      0%{ transform: translate3d(0,0,0); }
+      10%{ transform: translate3d(-2%, -1%, 0); }
+      20%{ transform: translate3d(-4%, 1%, 0); }
+      30%{ transform: translate3d(2%, -2%, 0); }
+      40%{ transform: translate3d(4%, 2%, 0); }
+      50%{ transform: translate3d(-3%, 3%, 0); }
+      60%{ transform: translate3d(3%, 1%, 0); }
+      70%{ transform: translate3d(1%, -3%, 0); }
+      80%{ transform: translate3d(-1%, 2%, 0); }
+      90%{ transform: translate3d(2%, 1%, 0); }
+      100%{ transform: translate3d(0,0,0); }
+    }
+
+    /* Additional premium “orbs” (keep existing animations too) */
+    .bg-orb{
+      position: fixed;
+      width: 900px;
+      height: 900px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: .28;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-orb.green{
+      background: #22c55e;
+      top: -260px;
+      left: -260px;
+      animation: float1 18s ease-in-out infinite;
+    }
+    .bg-orb.brown{
+      background: #6b3f22;
+      bottom: -320px;
+      right: -260px;
+      animation: float2 22s ease-in-out infinite;
+    }
+    @keyframes float1{
+      0%,100%{ transform: translate(0,0); }
+      50%{ transform: translate(140px,90px); }
+    }
+    @keyframes float2{
+      0%,100%{ transform: translate(0,0); }
+      50%{ transform: translate(-140px,-80px); }
+    }
+
+    /* Keep your existing glow animation */
     .glow{
       position: fixed;
       inset: -20%;
@@ -51,6 +112,7 @@
       opacity: .9;
       animation: floaty 12s ease-in-out infinite;
       pointer-events:none;
+      z-index: 0;
     }
     @keyframes floaty{
       0%{ transform: translate3d(0,0,0) scale(1); }
@@ -218,11 +280,9 @@
       overflow: hidden;
     }
 
-    /* iPhone-ish ripple */
     .btn::after{
       content:"";
       position:absolute;
-      inset:auto;
       width: 10px;
       height: 10px;
       border-radius: 999px;
@@ -306,7 +366,7 @@
     footer a:hover{ text-decoration: underline; }
 
     @media (prefers-reduced-motion: reduce){
-      .glow, .logo, .welcome, .sub, .spinner{ animation: none !important; }
+      .glow, .bg-orb, .grain, .logo, .welcome, .sub, .spinner{ animation: none !important; }
       .btn{ transition: none !important; opacity: 1 !important; transform: none !important; }
       .menu{ display:block !important; }
       .card.exit{ animation: none !important; }
@@ -315,7 +375,15 @@
 </head>
 
 <body>
+  <!-- Premium background layers (new) -->
+  <div class="bg-orb green" aria-hidden="true"></div>
+  <div class="bg-orb brown" aria-hidden="true"></div>
+
+  <!-- Existing glow animation stays -->
   <div class="glow" aria-hidden="true"></div>
+
+  <!-- Premium grain -->
+  <div class="grain" aria-hidden="true"></div>
 
   <div class="wrap">
     <div class="card" id="card" role="main" aria-label="MILTOS digitale Karte">
@@ -331,7 +399,7 @@
 
       <section class="menu" id="menu">
         <div class="btns">
-          <a class="btn" id="b1" href="Speisekarte2026%20new.pdf" target="_blank" rel="noopener">
+          <a class="btn" id="b1" href="Karte%20caf%C3%A9%202026%20new.pdf" target="_blank" rel="noopener">
             <span class="left">
               <span class="dot" aria-hidden="true"></span>
               <span class="label">Speisen &amp; Getränke</span>
@@ -358,10 +426,7 @@
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
 
-    // Zeit bis Buttons erscheinen
-    const REVEAL_MS = 2500;
-
-    // Übergang beim Klick (kurz, iPhone-like)
+    const REVEAL_MS = 3000;
     const EXIT_MS = 260;
 
     const menu = document.getElementById("menu");
@@ -389,7 +454,7 @@
       el.style.setProperty("--x", x + "px");
       el.style.setProperty("--y", y + "px");
       el.classList.remove("ripple");
-      void el.offsetWidth; // restart animation
+      void el.offsetWidth;
       el.classList.add("ripple");
       setTimeout(() => el.classList.remove("ripple"), 650);
     }
@@ -399,10 +464,8 @@
         e.preventDefault();
         addRipple(e, el);
 
-        // kurzer “iPhone transition”
         card.classList.add("exit");
 
-        // dann erst öffnen (besserer UX)
         const url = el.getAttribute("href");
         setTimeout(() => {
           window.open(url, "_blank", "noopener");
