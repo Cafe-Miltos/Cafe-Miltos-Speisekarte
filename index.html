@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MILTOS Café – Digitale Speisekarte</title>
+  <meta name="description" content="Digitale Speisekarte und Eiskarte – MILTOS Café, Marktplatz 8, 72793 Pfullingen." />
+  <meta name="theme-color" content="#ffffff" />
+  <style>
+    :root {
+      --bg1: #ffffff;
+      --bg2: #fff7ed;
+      --card: rgba(255,255,255,0.86);
+      --text: #111827;
+      --muted: #6b7280;
+      --border: rgba(17,24,39,0.10);
+      --shadow: 0 16px 40px rgba(0,0,0,0.10);
+      --radius: 18px;
+      --max: 980px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(850px 420px at 10% 0%, rgba(236,72,153,0.14), transparent 60%),
+        radial-gradient(850px 420px at 90% 10%, rgba(16,185,129,0.12), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+    }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 18px; }
+    header {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+    .logo {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(236,72,153,0.14), rgba(16,185,129,0.10));
+      font-size: 28px;
+    }
+    h1 { margin: 0; font-size: 22px; line-height: 1.2; }
+    .sub { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px; }
+    @media (min-width: 860px) { .grid { grid-template-columns: 2fr 1fr; } }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      padding: 16px;
+    }
+    .btns { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+    @media (min-width: 520px) { .btns { grid-template-columns: 1fr 1fr; } }
+    .btn {
+      display: block;
+      text-decoration: none;
+      text-align: center;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.85);
+      font-weight: 750;
+    }
+    .btn.primary {
+      background: rgba(236,72,153,0.14);
+      border-color: rgba(236,72,153,0.26);
+    }
+    .btn.secondary {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.22);
+    }
+    .hint {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .pillrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .pill {
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.75);
+    }
+    footer { text-align: center; margin: 18px 0 28px; color: var(--muted); font-size: 12px; }
+    .sep { height: 1px; background: var(--border); margin: 12px 0; }
+    .small { font-size: 12px; color: var(--muted); line-height: 1.45; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo" aria-hidden="true">☕</div>
+      <div>
+        <h1>MILTOS Café – Digitale Speisekarte</h1>
+        <p class="sub">Bitte wählen: Speisen/Getränke oder Eiskarte</p>
+        <div class="pillrow">
+          <span class="pill">📍 Marktplatz 8 • 72793 Pfullingen</span>
+          <span class="pill">☎️ 07121 1445599</span>
+          <span class="pill">✉️ cafe.miltos@gmail.com</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <main class="card">
+        <h2 style="margin:0; font-size:18px;">Menü öffnen</h2>
+        <p class="hint" style="margin-top:6px;">Optimiert fürs Handy. Tippen genügt.</p>
+
+        <div class="btns">
+          <a class="btn primary" href="https://ben23ny.github.io/Cafe-Miltos-Speisekarte/Karte%20caf%C3%A9%202026%20new.pdf" target="_blank" rel="noopener">🍽️ Speisen & Getränke (PDF)</a>
+          <a class="btn secondary" href="https://ben23ny.github.io/Cafe-Miltos-Speisekarte/Eiskarte2026%20new.pdf" target="_blank" rel="noopener">🍦 Eiskarte (PDF)</a>
+        </div>
+
+        <div class="sep"></div>
+
+        <p class="small">
+          Falls der Button „Speisen & Getränke“ nicht öffnet (wegen Sonderzeichen im Dateinamen), nutze diesen Alternativ-Link:
+          <a href="https://ben23ny.github.io/Cafe-Miltos-Speisekarte/Karte%20cafe%CC%81%202026%20new.pdf" target="_blank" rel="noopener">Alternative PDF-URL</a>
+        </p>
+
+        <p class="hint">
+          Tipp: Nach Änderungen an den PDFs kann GitHub Pages 1–2 Minuten brauchen, bis die neue Version sichtbar ist.
+        </p>
+      </main>
+
+      <aside class="card">
+        <h2 style="margin:0; font-size:18px;">Schnellaktionen</h2>
+        <p class="hint" style="margin-top:8px;">
+          QR-Code Empfehlung: Verlinke den QR-Code auf diese Landingpage (nicht direkt auf das PDF). Das wirkt professioneller und du kannst später PDFs austauschen, ohne den QR neu zu drucken.
+        </p>
+
+        <div class="sep"></div>
+
+        <div class="btns" style="grid-template-columns: 1fr;">
+          <a class="btn" href="tel:+4971211445599">📞 Anrufen</a>
+          <a class="btn" href="mailto:cafe.miltos@gmail.com">✉️ E-Mail</a>
+          <a class="btn" href="https://maps.google.com/?q=Marktplatz%208%2072793%20Pfullingen" target="_blank" rel="noopener">🗺️ Route öffnen</a>
+          <a class="btn" href="https://miltos.cafe" target="_blank" rel="noopener">🌐 miltos.cafe</a>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      © <span id="y"></span> MILTOS Café • Digitale Speisekarte
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
