@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MILTOS Café – Digitale Karte</title>
   <meta name="theme-color" content="#f6f2ec" />
+  <meta name="description" content="Digitale Speisekarte und Eiskarte – MILTOS Café." />
 
   <style>
     :root{
@@ -14,17 +15,17 @@
       --brown:#3a2415;
       --brown2:#5a3b1e;
 
-      /* Light / Premium */
+      /* Apple-ish */
       --bg1:#fbfaf8;
-      --bg2:#f3efe8;
+      --bg2:#f1ede6;
       --text:#0f172a;
       --muted:rgba(15,23,42,.62);
-      --glass: rgba(255,255,255,.72);
-      --glass2: rgba(255,255,255,.85);
+      --glass: rgba(255,255,255,.70);
+      --glass2: rgba(255,255,255,.86);
       --line: rgba(15,23,42,.10);
-      --shadow: 0 24px 70px rgba(2,6,23,.14);
+      --shadow: 0 22px 70px rgba(2,6,23,.14);
       --r: 22px;
-      --max: 520px;
+      --max: 920px;
     }
 
     *{ box-sizing:border-box; }
@@ -36,21 +37,20 @@
       background:
         radial-gradient(900px 600px at 16% 10%, rgba(34,197,94,.18), transparent 55%),
         radial-gradient(900px 600px at 84% 14%, rgba(90,59,30,.14), transparent 55%),
-        radial-gradient(900px 600px at 50% 110%, rgba(22,163,74,.12), transparent 55%),
+        radial-gradient(900px 600px at 50% 110%, rgba(22,163,74,.10), transparent 55%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
-      overflow:hidden;
+      overflow-x:hidden;
     }
 
-    /* Soft moving light */
     .glow{
       position: fixed;
       inset: -20%;
       background:
-        radial-gradient(closest-side at 30% 28%, rgba(34,197,94,.18), transparent 62%),
-        radial-gradient(closest-side at 72% 36%, rgba(90,59,30,.14), transparent 62%),
-        radial-gradient(closest-side at 50% 86%, rgba(34,197,94,.10), transparent 62%);
+        radial-gradient(closest-side at 30% 28%, rgba(34,197,94,.16), transparent 62%),
+        radial-gradient(closest-side at 72% 36%, rgba(90,59,30,.12), transparent 62%),
+        radial-gradient(closest-side at 50% 86%, rgba(34,197,94,.08), transparent 62%);
       filter: blur(44px);
-      opacity: .85;
+      opacity: .9;
       animation: floaty 12s ease-in-out infinite;
       pointer-events:none;
     }
@@ -61,18 +61,19 @@
     }
 
     .wrap{
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 22px;
       position: relative;
       z-index: 1;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px;
+      min-height: 100%;
+      display: grid;
+      place-items: center;
     }
 
     .card{
-      width: min(var(--max), 94vw);
-      border-radius: calc(var(--r) + 10px);
+      width: min(940px, 96vw);
+      border-radius: calc(var(--r) + 12px);
       background: linear-gradient(180deg, var(--glass2), var(--glass));
       border: 1px solid var(--line);
       box-shadow: var(--shadow);
@@ -86,52 +87,65 @@
     }
     @keyframes enter{ to{ transform: translateY(0); opacity: 1; } }
 
-    .top{
-      padding: 26px 18px 18px;
-      display:grid;
+    header{
+      padding: 22px 18px 16px;
+      display: grid;
       gap: 10px;
-      justify-items:center;
-      text-align:center;
-      position: relative;
+      justify-items: center;
+      text-align: center;
       border-bottom: 1px solid rgba(15,23,42,.08);
       background:
-        radial-gradient(800px 260px at 50% 0%, rgba(34,197,94,.10), transparent 65%),
-        radial-gradient(800px 260px at 50% 0%, rgba(90,59,30,.08), transparent 70%);
+        radial-gradient(900px 280px at 50% 0%, rgba(34,197,94,.10), transparent 65%),
+        radial-gradient(900px 280px at 50% 0%, rgba(90,59,30,.08), transparent 70%);
     }
 
     .logo{
-      width: min(320px, 78vw);
-      height:auto;
-      filter: drop-shadow(0 10px 18px rgba(2,6,23,.18));
+      width: min(340px, 80vw);
+      height: auto;
+      filter: drop-shadow(0 12px 18px rgba(2,6,23,.16));
       transform: translateY(-2px);
-      animation: pop .85s cubic-bezier(.2,.9,.2,1) .03s both;
+      opacity: 0;
+      animation: pop .85s cubic-bezier(.2,.9,.2,1) .05s forwards;
       border-radius: 14px;
     }
     @keyframes pop{
-      from{ transform: translateY(-8px) scale(.985); opacity:0; }
+      from{ transform: translateY(-10px) scale(.985); opacity:0; }
       to{ transform: translateY(-2px) scale(1); opacity:1; }
     }
 
-    .fallback{
-      display:none;
-      font-weight: 900;
-      letter-spacing: .08em;
-      color: var(--brown);
-      background: rgba(90,59,30,.08);
-      border: 1px solid rgba(90,59,30,.14);
-      padding: 14px 16px;
-      border-radius: 16px;
-    }
-
     .sub{
-      margin: 2px 0 0;
+      margin: 0;
       color: var(--muted);
       font-size: 13px;
     }
 
-    .content{ padding: 16px 18px 22px; }
+    .content{
+      padding: 16px 18px 18px;
+      display: grid;
+      gap: 14px;
+    }
 
-    .btns{ display:grid; gap: 12px; }
+    .grid{
+      display: grid;
+      gap: 14px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 860px){
+      .grid{ grid-template-columns: 360px 1fr; align-items: start; }
+    }
+
+    .panel{
+      border: 1px solid rgba(15,23,42,.08);
+      border-radius: calc(var(--r) + 4px);
+      background: rgba(255,255,255,.55);
+      overflow: hidden;
+    }
+
+    .btns{
+      display:grid;
+      gap: 12px;
+      padding: 14px;
+    }
 
     .btn{
       display:flex;
@@ -149,6 +163,7 @@
       -webkit-tap-highlight-color: transparent;
       font-weight: 850;
       letter-spacing: .01em;
+      cursor: pointer;
     }
     .btn:hover{
       transform: translateY(-1px);
@@ -194,13 +209,82 @@
       box-shadow: 0 0 0 6px rgba(255,255,255,.16);
     }
 
-    .foot{
-      padding: 10px 18px 16px;
-      color: rgba(15,23,42,.50);
+    .preview{
+      padding: 0;
+    }
+
+    .previewHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(15,23,42,.08);
+      background: rgba(255,255,255,.6);
+    }
+    .previewTitle{
+      font-weight: 800;
+      font-size: 13px;
+      color: rgba(15,23,42,.72);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .miniLink{
+      font-size: 12px;
+      text-decoration: none;
+      color: rgba(15,23,42,.70);
+      border: 1px solid rgba(15,23,42,.12);
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.75);
+      cursor: pointer;
+    }
+
+    iframe{
+      width: 100%;
+      height: min(68vh, 720px);
+      border: 0;
+      display:block;
+      background: white;
+    }
+    @media (max-width: 859px){
+      iframe{ height: min(58vh, 640px); }
+    }
+
+    .note{
+      padding: 10px 14px 14px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      background: rgba(255,255,255,.45);
+      border-top: 1px solid rgba(15,23,42,.08);
+    }
+
+    footer{
+      padding: 12px 18px 16px;
+      color: rgba(15,23,42,.52);
       font-size: 12px;
       text-align:center;
       border-top: 1px solid rgba(15,23,42,.08);
       background: rgba(255,255,255,.45);
+    }
+    footer a{
+      color: rgba(15,23,42,.72);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    footer a:hover{ text-decoration: underline; }
+
+    .fallback{
+      display:none;
+      font-weight: 900;
+      letter-spacing: .08em;
+      color: var(--brown);
+      background: rgba(90,59,30,.08);
+      border: 1px solid rgba(90,59,30,.14);
+      padding: 14px 16px;
+      border-radius: 16px;
     }
   </style>
 </head>
@@ -210,40 +294,89 @@
 
   <div class="wrap">
     <div class="card" role="main" aria-label="MILTOS digitale Karte">
-      <div class="top">
-        <!-- WICHTIG: Datei muss im Root exakt so heißen: miltos-logo.png -->
+      <header>
+        <!-- Logo liegt im Root exakt so: miltos-logo.png -->
         <img class="logo" src="miltos-logo.png" alt="MILTOS Café"
              onerror="this.style.display='none'; document.getElementById('fallback').style.display='block';" />
         <div id="fallback" class="fallback">MILTOS</div>
         <p class="sub">Digitale Karte • bitte auswählen</p>
-      </div>
+      </header>
 
       <div class="content">
-        <div class="btns">
-          <a class="btn" href="https://cafe-miltos.github.io/Cafe-Miltos-Speisekarte/Karte%20caf%C3%A9%202026%20new.pdf" target="_blank" rel="noopener">
-            <span class="left">
-              <span class="dot" aria-hidden="true"></span>
-              <span class="label">Speisen &amp; Getränke</span>
-            </span>
-            <span class="chev" aria-hidden="true">›</span>
-          </a>
+        <div class="grid">
+          <!-- LEFT: Auswahl -->
+          <section class="panel">
+            <div class="btns">
+              <a class="btn" id="btn-food" href="Karte%20caf%C3%A9%202026%20new.pdf" target="_blank" rel="noopener">
+                <span class="left">
+                  <span class="dot" aria-hidden="true"></span>
+                  <span class="label">Speisen &amp; Getränke</span>
+                </span>
+                <span class="chev" aria-hidden="true">›</span>
+              </a>
 
-          <a class="btn green" href="https://cafe-miltos.github.io/Cafe-Miltos-Speisekarte/Eiskarte2026%20new.pdf" target="_blank" rel="noopener">
-            <span class="left">
-              <span class="dot" aria-hidden="true"></span>
-              <span class="label">Eiskarte</span>
-            </span>
-            <span class="chev" aria-hidden="true">›</span>
-          </a>
+              <a class="btn green" id="btn-ice" href="Eiskarte2026%20new.pdf" target="_blank" rel="noopener">
+                <span class="left">
+                  <span class="dot" aria-hidden="true"></span>
+                  <span class="label">Eiskarte</span>
+                </span>
+                <span class="chev" aria-hidden="true">›</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- RIGHT: PDF Vorschau -->
+          <section class="panel preview" aria-label="PDF Vorschau">
+            <div class="previewHead">
+              <div class="previewTitle" id="previewTitle">Vorschau: Speisen &amp; Getränke</div>
+              <a class="miniLink" id="openPdf" href="Karte%20caf%C3%A9%202026%20new.pdf" target="_blank" rel="noopener">PDF öffnen</a>
+            </div>
+            <iframe id="viewer" title="PDF Vorschau" loading="lazy" src="Karte%20caf%C3%A9%202026%20new.pdf#view=FitH"></iframe>
+            <div class="note">
+              Tipp: Falls die Vorschau auf manchen Geräten nicht angezeigt wird, einfach auf „PDF öffnen“ tippen.
+            </div>
+          </section>
         </div>
       </div>
 
-      <div class="foot">© <span id="y"></span> MILTOS Café</div>
+      <footer>
+        © <span id="y"></span> MILTOS Café · <a href="impressum.html">Impressum</a>
+      </footer>
     </div>
   </div>
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+
+    const viewer = document.getElementById("viewer");
+    const previewTitle = document.getElementById("previewTitle");
+    const openPdf = document.getElementById("openPdf");
+
+    const food = {
+      title: "Vorschau: Speisen & Getränke",
+      url: "Kartecafe2026new.pdf"
+    };
+    const ice = {
+      title: "Vorschau: Eiskarte",
+      url: "Eiskarte2026%20new.pdf"
+    };
+
+    function setPreview(item){
+      previewTitle.textContent = item.title;
+      viewer.src = item.url + "#view=FitH";
+      openPdf.href = item.url;
+    }
+
+    // Preview per Klick wechseln, Link zum PDF bleibt (öffnet in neuem Tab)
+    document.getElementById("btn-food").addEventListener("click", (e) => {
+      e.preventDefault();
+      setPreview(food);
+    });
+
+    document.getElementById("btn-ice").addEventListener("click", (e) => {
+      e.preventDefault();
+      setPreview(ice);
+    });
   </script>
 </body>
 </html>
