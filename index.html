@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MILTOS Café – Digitale Karte</title>
   <meta name="theme-color" content="#f6f2ec" />
-  <meta name="description" content="Digitale Speisekarte und Eiskarte – MILTOS Café." />
 
   <style>
     :root{
@@ -24,6 +23,7 @@
       --line: rgba(15,23,42,.10);
       --shadow: 0 22px 70px rgba(2,6,23,.14);
       --r: 22px;
+
       --max: 560px;
     }
 
@@ -38,9 +38,10 @@
         radial-gradient(900px 600px at 84% 14%, rgba(90,59,30,.14), transparent 55%),
         radial-gradient(900px 600px at 50% 110%, rgba(22,163,74,.10), transparent 55%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
-      overflow:hidden;
+      overflow-x:hidden;
     }
 
+    /* Apple-like soft moving light */
     .glow{
       position: fixed;
       inset: -20%;
@@ -60,12 +61,12 @@
     }
 
     .wrap{
-      position: relative;
-      z-index: 1;
       min-height:100%;
       display:grid;
       place-items:center;
       padding: 18px;
+      position: relative;
+      z-index: 1;
     }
 
     .card{
@@ -77,42 +78,90 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       overflow:hidden;
-    }
 
-    /* Splash */
-    .splash{
-      padding: 26px 18px 22px;
+      transform: translateY(8px);
+      opacity: 0;
+      animation: enter .55s ease-out forwards;
+    }
+    @keyframes enter{ to{ transform: translateY(0); opacity: 1; } }
+
+    /* Top area with true 3D perspective */
+    .top{
+      padding: 26px 18px 14px;
       display:grid;
       justify-items:center;
       text-align:center;
       gap: 10px;
-      min-height: 420px;
+      border-bottom: 1px solid rgba(15,23,42,.08);
+
+      /* Important: perspective enables “depth” */
+      perspective: 900px;
+      transform-style: preserve-3d;
+
+      background:
+        radial-gradient(900px 280px at 50% 0%, rgba(34,197,94,.10), transparent 65%),
+        radial-gradient(900px 280px at 50% 0%, rgba(90,59,30,.08), transparent 70%);
     }
 
+    .logoWrap{
+      transform-style: preserve-3d;
+      will-change: transform, opacity, filter;
+    }
+
+    /* 3D “fly from depth”: translateZ + rotateX + blur */
     .logo{
       width: min(320px, 80vw);
       height:auto;
+      border-radius: 14px;
       filter: drop-shadow(0 12px 18px rgba(2,6,23,.16));
       opacity: 0;
-      transform: translate3d(0, 18px, 0) scale(.96);
-      animation: flyIn .9s cubic-bezier(.2,.9,.2,1) .05s forwards;
-      border-radius: 14px;
+
+      transform:
+        translate3d(0, 22px, 0)
+        translateZ(-280px)
+        rotateX(18deg)
+        scale(.92);
+
+      animation: logo3d 1050ms cubic-bezier(.18,.95,.18,1) 60ms forwards;
     }
 
-    /* “von hinten reinfliegen” */
-    @keyframes flyIn{
-      0%   { opacity: 0; transform: translate3d(0, 24px, -80px) scale(.90); filter: blur(2px) drop-shadow(0 0 0 rgba(0,0,0,0)); }
-      65%  { opacity: 1; transform: translate3d(0, -6px, 0) scale(1.02); filter: blur(0px) drop-shadow(0 16px 24px rgba(2,6,23,.18)); }
-      100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0px) drop-shadow(0 12px 18px rgba(2,6,23,.16)); }
+    @keyframes logo3d{
+      0%{
+        opacity: 0;
+        transform:
+          translate3d(0, 28px, 0)
+          translateZ(-340px)
+          rotateX(22deg)
+          scale(.90);
+        filter: blur(3px) drop-shadow(0 0 0 rgba(0,0,0,0));
+      }
+      70%{
+        opacity: 1;
+        transform:
+          translate3d(0, -6px, 0)
+          translateZ(18px)
+          rotateX(0deg)
+          scale(1.02);
+        filter: blur(0px) drop-shadow(0 18px 26px rgba(2,6,23,.18));
+      }
+      100%{
+        opacity: 1;
+        transform:
+          translate3d(0, 0, 0)
+          translateZ(0px)
+          rotateX(0deg)
+          scale(1);
+        filter: blur(0px) drop-shadow(0 12px 18px rgba(2,6,23,.16));
+      }
     }
 
     .welcome{
-      margin: 2px 0 0;
+      margin: 0;
       font-weight: 900;
-      letter-spacing: .02em;
       font-size: 18px;
       opacity: 0;
-      animation: fadeUp .55s ease-out .55s forwards;
+      transform: translateY(10px);
+      animation: fadeUp .55s ease-out 520ms forwards;
     }
     .sub{
       margin: 0;
@@ -120,10 +169,10 @@
       font-size: 13px;
       line-height: 1.35;
       opacity: 0;
-      animation: fadeUp .55s ease-out .72s forwards;
+      transform: translateY(10px);
+      animation: fadeUp .55s ease-out 680ms forwards;
     }
     @keyframes fadeUp{
-      from{ opacity:0; transform: translateY(8px); }
       to{ opacity:1; transform: translateY(0); }
     }
 
@@ -133,40 +182,21 @@
       border: 3px solid rgba(15,23,42,.18);
       border-top-color: rgba(34,197,94,.75);
       animation: spin 1s linear infinite;
-      margin-top: 10px;
+      margin-top: 6px;
       opacity: 0;
-      animation: fadeUp .55s ease-out .85s forwards, spin 1s linear infinite;
+      transform: translateY(10px);
+      animation: fadeUp .55s ease-out 820ms forwards, spin 1s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
 
-    /* Menu */
+    /* Menu section appears after delay, logo stays */
     .menu{
-      display:none;
-      padding: 18px;
-      gap: 12px;
+      padding: 16px 18px 18px;
+      display: none;
     }
 
-    .titleRow{
-      text-align:center;
-      padding: 14px 10px 6px;
-      border-top: 1px solid rgba(15,23,42,.08);
-    }
-    .titleRow .t{
-      margin:0;
-      font-weight: 900;
-      font-size: 16px;
-    }
-    .titleRow .m{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .btns{ display:grid; gap: 12px; }
 
-    .btns{
-      display:grid;
-      gap: 12px;
-      padding: 14px 0 6px;
-    }
     .btn{
       display:flex;
       align-items:center;
@@ -183,7 +213,17 @@
       -webkit-tap-highlight-color: transparent;
       font-weight: 850;
       letter-spacing: .01em;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
     }
+
+    .btn.show{
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity .38s ease, transform .38s ease, box-shadow .12s ease, filter .12s ease;
+    }
+
     .btn:hover{
       transform: translateY(-1px);
       box-shadow: 0 16px 34px rgba(2,6,23,.14);
@@ -243,15 +283,11 @@
     }
     footer a:hover{ text-decoration: underline; }
 
-    .fallback{
-      display:none;
-      font-weight: 900;
-      letter-spacing: .08em;
-      color: var(--brown);
-      background: rgba(90,59,30,.08);
-      border: 1px solid rgba(90,59,30,.14);
-      padding: 14px 16px;
-      border-radius: 16px;
+    /* Reduce motion for accessibility */
+    @media (prefers-reduced-motion: reduce){
+      .glow, .logo, .welcome, .sub, .spinner{ animation: none !important; }
+      .btn{ transition: none !important; opacity: 1 !important; transform: none !important; }
+      .menu{ display:block !important; }
     }
   </style>
 </head>
@@ -261,27 +297,22 @@
 
   <div class="wrap">
     <div class="card" role="main" aria-label="MILTOS digitale Karte">
-      <!-- SPLASH -->
-      <section class="splash" id="splash">
-        <img class="logo" src="miltos-logo.png" alt="MILTOS Café"
-             onerror="this.style.display='none'; document.getElementById('fallback').style.display='block';" />
-        <div id="fallback" class="fallback">MILTOS</div>
 
-        <div class="welcome">Herzlich willkommen</div>
-        <p class="sub">Bitte kurz auswählen – die Karte öffnet sich direkt.</p>
-        <div class="spinner" aria-hidden="true"></div>
-      </section>
-
-      <!-- MENU (nach Splash eingeblendet) -->
-      <section class="menu" id="menu">
-        <div class="titleRow">
-          <p class="t">Auswahl</p>
-          <p class="m">Tippen genügt</p>
+      <section class="top">
+        <!-- Logo liegt im Root exakt so: miltos-logo.png -->
+        <div class="logoWrap">
+          <img class="logo" src="miltos-logo.png" alt="MILTOS Café" />
         </div>
 
+        <p class="welcome">Herzlich willkommen</p>
+        <p class="sub">Bitte auswählen – die Karte öffnet sich direkt.</p>
+        <div class="spinner" id="spinner" aria-hidden="true"></div>
+      </section>
+
+      <section class="menu" id="menu">
         <div class="btns">
-          <!-- Direktes Öffnen ohne Vorschau: öffnet das PDF sofort -->
-          <a class="btn" href="Karte%20caf%C3%A9%202026%20new.pdf" target="_blank" rel="noopener">
+          <!-- Öffnet direkt PDF (ohne Viewer auf der Seite) -->
+          <a class="btn" id="b1" href="Karte%20caf%C3%A9%202026%20new.pdf" target="_blank" rel="noopener">
             <span class="left">
               <span class="dot" aria-hidden="true"></span>
               <span class="label">Speisen &amp; Getränke</span>
@@ -289,7 +320,7 @@
             <span class="chev" aria-hidden="true">›</span>
           </a>
 
-          <a class="btn green" href="Eiskarte2026%20new.pdf" target="_blank" rel="noopener">
+          <a class="btn green" id="b2" href="Eiskarte2026%20new.pdf" target="_blank" rel="noopener">
             <span class="left">
               <span class="dot" aria-hidden="true"></span>
               <span class="label">Eiskarte</span>
@@ -308,15 +339,26 @@
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
 
-    // Splash -> Menu (nach ~1.6s)
-    const splash = document.getElementById("splash");
+    // >>> HIER EINSTELLEN: Wann soll die Auswahl erscheinen?
+    // Millisekunden: 1200 = 1.2s, 2000 = 2.0s, 2800 = 2.8s
+    const REVEAL_MS = 2600;
+
     const menu = document.getElementById("menu");
+    const spinner = document.getElementById("spinner");
+    const b1 = document.getElementById("b1");
+    const b2 = document.getElementById("b2");
 
     window.addEventListener("load", () => {
       setTimeout(() => {
-        splash.style.display = "none";
         menu.style.display = "block";
-      }, 1600);
+        spinner.style.display = "none";
+
+        // Buttons weich einblenden (stagger)
+        requestAnimationFrame(() => {
+          b1.classList.add("show");
+          setTimeout(() => b2.classList.add("show"), 120);
+        });
+      }, REVEAL_MS);
     });
   </script>
 </body>
